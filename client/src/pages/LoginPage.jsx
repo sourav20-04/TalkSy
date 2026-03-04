@@ -3,6 +3,7 @@ import OTPInput from "../lib/OTPInput.jsx";
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext.jsx";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [step, setStep] = useState("phone"); // phone → otp → name
@@ -11,7 +12,7 @@ const LoginPage = () => {
   const [name, setName] = useState("");
 //   const [isNewUser, setIsNewUser] = useState(false);
 
-const {login,isNewUser} = useContext(AuthContext);
+const {login} = useContext(AuthContext);
 
 const navigate = useNavigate();
 
@@ -21,25 +22,29 @@ const navigate = useNavigate();
  }
 
  
-  const handleNumSubmit = (e)=>{
+  const handleNumSubmit = async(e)=>{
       e.preventDefault(); 
-      login('send-otp',{phone})
+     await login('send-otp',{phone})
        setStep("otp") 
  
   }
 
 
- const handleOtpSubmit=(e)=>{
-     e.preventDefault();
-     login('verify-otp',{phone,otp})
+ const handleOtpSubmit=async(e)=>{
+      e.preventDefault();
+      if (otp.length !== 6) {
+      return toast.warn("Enter valid 6 digit OTP")
+      }
+
+     const res = await login('verify-otp',{phone,otp})
      console.log(otp)
 
-     if(isNewUser==true){
+     if(res?.isNewUser){
          setStep("name")    
+      }else {
+        navigate('/')
       }
        
-      navigate('/')
-
  }
   
 
