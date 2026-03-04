@@ -32,11 +32,14 @@ const navigate = useNavigate();
 
  const handleOtpSubmit=async(e)=>{
       e.preventDefault();
+     
       if (otp.length !== 6) {
       return toast.warn("Enter valid 6 digit OTP")
       }
+      
 
      const res = await login('verify-otp',{phone,otp})
+       if (!res) return;  // 🔥 important
      console.log(otp)
 
      if(res?.isNewUser){
@@ -46,6 +49,21 @@ const navigate = useNavigate();
       }
        
  }
+
+
+ const handleNameSubmit = async (e) => {
+  e.preventDefault();
+
+  if (!name.trim()) {
+    return toast.warn("Enter your name");
+  }
+
+  const res = await login("add-name", { phone, name });
+
+  if (!res) return;
+
+  navigate('/');
+};
   
 
   return (
@@ -90,7 +108,7 @@ const navigate = useNavigate();
 
        {/* name section */}
     {step==="name" && 
-       <form className="flex flex-col transition-all duration-500 items-center justify-center gap-2 sm:gap-4" action="">
+       <form  onSubmit={handleNameSubmit}  className="flex flex-col transition-all duration-500 items-center justify-center gap-2 sm:gap-4" action="">
             <span className="font-medium ">Full Name</span>
             <input 
             type="text" 

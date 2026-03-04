@@ -41,9 +41,11 @@ export const verifyOtp = async (req,res) => {
   try {
     const {phone,otp}=req.body;
 
-     const record = await Otp.findOne({phone,otp});
+     const record = await Otp.findOne({phone});
 
-     if(!record) return res.json({success: false,message: "Invalid OTP"});
+     if(!record) return res.json({success: false,message: "Send  OTP again"});
+
+     if (record?.otp.toString()!==otp.toString()) return res.status(401).json({success: false, message: "Invalid otp"})
 
      //CHECK EXPIRES 
      if(record.expireAt < Date.now()) return res.json({success: false,message: "OTP Expired"});
@@ -114,6 +116,7 @@ export const addName = async (req,res) => {
 
 export const getMe = async (req,res) => {
   try {
+    
     return res.status(200).json({success: true,user: req.user})
   } catch (error) {
     console.log(error);

@@ -11,7 +11,7 @@ export const authMiddleWare = async (req,res,next) => {
         
          
         if(!token){
-            return res.json({success: false,message: "Unauthorized"})
+            return res.status(401).json({success: false,message: "Unauthorized"})
         }
 
          console.log("SECRET",process.env.JWT_SECRET);

@@ -18,7 +18,12 @@ export const AuthProvider = ({ children }) => {
 
 
   const login = async (state, credentials) => {
+    
+     try {
+  
     const { data } = await api.post(`/api/auth/${state}`, credentials);
+
+
     if (data.success) {
       if (state !== "send-otp") {
         setAuthUser(data.user);
@@ -26,8 +31,22 @@ export const AuthProvider = ({ children }) => {
       setIsNewUser(data.isNewUser);
       toast.success(data.message);
       setLoadingAuth(false);
+
+
+      return data;
     }
+
+        
+     } catch (error) {
+       const message =
+      error.response?.data?.message || "Something went wrong";
+
+        toast.error(message);
+       return null;   // IMPORTANT
+     }
   };
+
+
 
   const logout = async () => {
     try {
