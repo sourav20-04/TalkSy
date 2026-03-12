@@ -23,12 +23,15 @@ export const AuthProvider = ({ children }) => {
   
     const { data } = await api.post(`/api/auth/${state}`, credentials);
 
-
     if (data.success) {
       if (state !== "send-otp") {
-        setAuthUser(data.user);
+        setAuthUser(data.data.user);
       }
-      setIsNewUser(data.isNewUser);
+    
+      console.log("Data",data)
+  
+
+      setIsNewUser(data.data?.isNewUser);
       toast.success(data.message);
       setLoadingAuth(false);
 
@@ -42,7 +45,6 @@ export const AuthProvider = ({ children }) => {
       error.response?.data?.message || "Something went wrong";
 
         toast.error(message);
-       return null;   // IMPORTANT
      }
   };
 
@@ -67,7 +69,7 @@ export const AuthProvider = ({ children }) => {
         const { data } = await api.get(`/api/auth/me`, {});
 
         if (data.success) {
-          setAuthUser(data.user);
+          setAuthUser(data.data.user);
         }
       } catch (err) {
         console.log(err.response?.data || err.message);

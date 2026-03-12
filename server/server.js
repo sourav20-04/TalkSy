@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import chatRouter from './routes/chatRoutes.js';
 import { WebSocketServer } from 'ws';
 import { setupWebSocket } from './ws/socketManager.js';
+import errorMiddleWare from './middleware/ErrorMiddleWare.js';
 
 
 
@@ -41,10 +42,13 @@ console.log(process.env.CLIENT_URL)
 
 app.use('/api/status' , (req,res)=>res.send("Server is running "));
 
+
 app.use('/api/auth',userRouter);
 
 app.use('/api/chat',chatRouter);
 
+// error middleware must be LAST
+app.use(errorMiddleWare)
 
 
 // database connection 

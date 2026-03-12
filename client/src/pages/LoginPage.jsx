@@ -24,9 +24,12 @@ const navigate = useNavigate();
  
   const handleNumSubmit = async(e)=>{
       e.preventDefault(); 
-     await login('send-otp',{phone})
-       setStep("otp") 
- 
+    const res = await login('send-otp',{phone})
+    console.log("Here",res)
+    if(res){
+
+      setStep("otp")
+    }
   }
 
 
@@ -40,9 +43,11 @@ const navigate = useNavigate();
 
      const res = await login('verify-otp',{phone,otp})
        if (!res) return;  // 🔥 important
-     console.log(otp)
+       
+     console.log("Res",res.data)
+     const { isNewUser } = res.data;
 
-     if(res?.isNewUser){
+     if(isNewUser){
          setStep("name")    
       }else {
         navigate('/')
